@@ -5,102 +5,123 @@ public class VeTwo {
 
 	public static void main(String[] args) {
 
-		Square mySquare = new Square(3);
-		//Square mySquare2 = new Square(3);
-		//mySquare2.switchTile(2,1);
-		//mySquare.toPrint();
-		//mySquare2.toPrint();
-		// mySquare.toPrint();
-		mySquare.testFunction();
-		// mySquare.toPrint();
-		// mySquare.switchTile(2, 1);
-		// mySquare.toPrint();
-
-		/*
-		 * Vector<Square> child = mySquare.generateChildren();//problem in
-		 * generate Children Iterator id = child.iterator();
-		 * while(id.hasNext()){ Square s= (Square) id.next(); //s.toPrint();
-		 * 
-		 * }
-		 */
-		// mySquare.toPrint();
-		// squareFunction();
+		//Daniel Good
+		//Currently Star runs a pure heuristic/best first search algorithm on a eight square puzzle
+		star();
 	}// end of main
 
-	static void squareFunction() {
-
-		int[][] assign = new int[9][2];
-		assign[0][0] = 0;
-		assign[0][1] = 2;
-		assign[1][0] = 2;
-		assign[1][1] = 2;
-		assign[2][0] = 2;
-		assign[2][1] = 1;
-		assign[3][0] = 1;
-		assign[3][1] = 2;
-		assign[4][0] = 0;
-		assign[4][1] = 0;
-		assign[5][0] = 1;
-		assign[5][1] = 0;
-		assign[6][0] = 2;
-		assign[6][1] = 0;
-		assign[7][0] = 0;
-		assign[7][1] = 1;
-		assign[8][0] = 1;
-		assign[8][1] = 1;
-
-		Square mySquare = new Square(3);
+	
+	
+	
+	static void star(){
+		//1
+			int[][] assign = new int[9][2];
+			assign[0][0] = 0;
+			assign[0][1] = 2;
+			assign[1][0] = 2;
+			assign[1][1] = 2;
+			assign[2][0] = 2;
+			assign[2][1] = 1;
+			assign[3][0] = 1;
+			assign[3][1] = 2;
+			assign[4][0] = 0;
+			assign[4][1] = 0;
+			assign[5][0] = 1;
+			assign[5][1] = 0;
+			assign[6][0] = 2;
+			assign[6][1] = 0;
+			assign[7][0] = 0;
+			assign[7][1] = 1;
+			assign[8][0] = 1;
+			assign[8][1] = 1;
+			Vector<Object> openList = new Vector<>(0);
+			Vector<Object> closedList = new Vector<>(0);
+			
+			Square mySquare = new Square(3);
 
 		mySquare.assign(assign);// ------------------bug here
-
-		// //////////////////////
-		Vector<Object> openList = new Vector<>(0);
-		Vector<Object> closedList = new Vector<>(0);
-		openList.add(mySquare);
-
+		openList.add(mySquare);// maintain openList as a priority queue with the
+								// lowest values first
+		int firstH = mySquare.getManDistanceD();
+		int firstF = firstH + 0;
+		// 2
 		boolean loop = true;
 		while (loop) {
-			// ////////////////////////
-			Iterator<Object> list = openList.iterator();
-			// //////////////// manhan distance
-			int low = 100000;
-			int lowIndex = -1;
-			int index = 0;
-			while (list.hasNext()) {
-				Square s = (Square) list.next();
-				int curr = s.getManDistanceD();
-				if (curr < low) {
-					low = curr;
-					lowIndex = index;
+			if (openList.isEmpty()) {
+				System.out.println("Failure: Openlist contains no more nodes");
+				loop = false;
+			} else {
+				Square copyNode = (Square) openList.get(0);
+				Square bestNode = new Square(3);
+				bestNode = copyNode.copy();
+               // bestNode.toPrint();
+				openList.remove(0);//
+
+				closedList.add(bestNode);
+				if (bestNode.checkGoal()) {
+					loop = false;
+					System.out.println("Solution reached");
+					bestNode.toPrint();
+				} else {
+					Vector<Square> children = new Vector<>(0);
+					children = bestNode.generateChildren();
+
+					Iterator id = children.iterator();
+					while (id.hasNext()) {
+						Square child = (Square) id.next();
+
+						
+						boolean permission = true;
+						Iterator<Object> innerlist1 = closedList.iterator();
+						while (innerlist1.hasNext()) {
+							Square out = (Square) innerlist1.next();
+							if (out.equals(child)){
+								permission = false;
+								//System.out.println("signal");
+							}
+								
+						}
+						
+						Iterator<Object> innerlist2 = openList.iterator();
+						while (innerlist2.hasNext()) {
+							Square out = (Square) innerlist2.next();
+							if (out.equals(child))
+								permission = false;
+						}
+
+						if (permission){
+							int childMan = child.getManDistanceD();
+							
+							int childIndex=0;
+							Iterator<Object> addList = openList.iterator();
+							while (addList.hasNext()) {
+								Square out = (Square) addList.next();
+								if(out.getManDistanceD()<childMan){
+									childIndex++;
+								}
+							}
+							
+							openList.add(childIndex, child);
+						}
+							
+					}//child loop bracket
+					
+					
+
 				}
-				index++;
+				
 			}
-
-			// //////////maintain lists
-			Square s = (Square) openList.get(lowIndex);
-			boolean goal = s.checkGoal();// check is current node is goal node
-			loop = !goal;
-			s.toPrint();
-			System.out.println();
-			if (goal) {
-				s.toPrint();
-				System.out.println("goal");
-				// System.out.println(goal);
-			}
-
-			openList.removeElementAt(lowIndex);
-			closedList.add(s);
-			Vector<Square> child = s.generateChildren();
-			Iterator id = child.iterator();
-			while (id.hasNext()) {
-				Square ss = (Square) id.next();
-				ss.toPrint();
-
-			}
-
-			// ////////////////
-		}// end of while
-	}// end of function
+			
+		}
+		
+		
+		
+		// 1
+		// 2
+		// 3
+		// 4
+		// 5
+	}
 
 }// end of class
 

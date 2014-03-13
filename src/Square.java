@@ -43,23 +43,13 @@ public class Square {
 	}
 
 	boolean checkGoal() {
-		Iterator<Tile> e = myTiles.iterator();
-
-		boolean i = true;
-		while (e.hasNext()) {
-			Tile t = e.next();
-			int myX = t.getX();
-			int myY = t.getY();
-			int iX = t.getinitX();
-			int iY = t.getinitY();
-			if (i && (myX == iX) && (myY == iY))
-				i = true;
-			else
-				i = false;
-			// System.out.println(myX + " "+ myY+" "+ t.getSymbol());
-			// System.out.println(iX + " "+ iY);
-			// System.out.println(i);
+		boolean i;
+		int distance= this.getManDistanceD();
+		if(distance==0){
+			i=true;
 		}
+		else
+			i=false;
 
 		return i;
 	}
@@ -73,8 +63,16 @@ public class Square {
 		Vector<Square> children = new Vector<>(0);
 		for (int i = 0; i < 4; i++) {
 			if (moves[i][0] != -1) {
+				Vector<Tile> tiles = new Vector<>(0);
+				
+				Iterator<Tile> iter = myTiles.iterator();
 
-				Square tempSqr = new Square(x + 1, myTiles, blankIndex);
+				while (iter.hasNext()) {
+					Tile t=iter.next();
+					Tile myT = new Tile(t.getX(),t.getY(),t.getinitX(),t.getinitY(),t.getSymbol());
+					tiles.add(myT);
+				}
+				Square tempSqr = new Square(x + 1, tiles, blankIndex);
 				// this.toPrint();
 				// tempSqr.toPrint();
 				tempSqr.switchTile(moves[i][0], moves[i][1]);// switch is
@@ -89,7 +87,7 @@ public class Square {
 
 			}
 		}
-		System.out.println("out of loop");
+		//System.out.println("out of loop");
 
 		// children.get(0).toPrint();
 		// children.get(1).toPrint();
@@ -108,6 +106,8 @@ public class Square {
 			Tile t = e.next();
 
 			if (myX == t.getX() && myY == t.getY()) {
+				
+				
 				Tile blank = myTiles.get(blankIndex);
 				int tx = t.getX();
 				int ty = t.getY();
@@ -141,8 +141,8 @@ public class Square {
 		// System.out.println(blankIndex);
 		while (e.hasNext()) {
 			Tile t = e.next();
-			// System.out.println(t.getX()+"  "+ t.getY() +" "+ t.getSymbol());
-			// System.out.println(t.getinitX() + " "+ t.getinitY());
+			//System.out.println(t.getX()+"  "+ t.getY() +" "+ t.getSymbol());
+			 //System.out.println(t.getinitX() + " "+ t.getinitY());
 			int x = t.getX();
 			int y = t.getY();
 			int symbol = t.getSymbol();
@@ -171,8 +171,12 @@ public class Square {
 			int myY = t.getY();
 			int iX = t.getinitX();
 			int iY = t.getinitY();
+			//System.out.println(t.getX()+"  "+ t.getY() +" "+ t.getSymbol());
+			//System.out.println(t.getinitX() + " "+ t.getinitY());
+			
 			distance = Math.abs(myX - iX) + Math.abs(myY - iY) + distance;
 		}
+		
 		return distance;
 	}
 
@@ -194,12 +198,65 @@ public class Square {
 
 	void testFunction() {
 		
-		Square tempSqr = new Square(x + 1, myTiles, blankIndex);
-		this.toPrint();
-		// tempSqr.toPrint();
-		tempSqr.switchTile(1, 2);// switch is editing parent nodes
-		// tempSqr.toPrint();
-		this.toPrint();
+		/*
+		Vector<Tile> Tiles = new Vector<>(0);
+		
+		Iterator<Tile> e = myTiles.iterator();
+
+		while (e.hasNext()) {
+			Tile t=e.next();
+			Tile myT = new Tile(t.getX(),t.getY(),t.getinitX(),t.getinitY(),t.getSymbol());
+			Tiles.add(myT);
+		}
+		Square tempSqr = new Square(x + 1, Tiles, blankIndex);
+		//tempSqr.switchTile(1, 2);
+		//tempSqr.toPrint();
+		//System.out.println();
+		//this.toPrint();
+		 * */
+	
+		
+	}
+	
+	Square copy(){
+		Vector<Tile> Tiles = new Vector<>(0);
+		Iterator<Tile> e = myTiles.iterator();
+
+		while (e.hasNext()) {
+			Tile t=e.next();
+			Tile myT = new Tile(t.getX(),t.getY(),t.getinitX(),t.getinitY(),t.getSymbol());
+			Tiles.add(myT);
+		}
+		Square tempSqr = new Square(x + 1, Tiles, blankIndex);
+		return tempSqr;
+		
+	}
+	
+	boolean equals(Square mySquare){
+		boolean test = true;
+		
+		Iterator<Tile> e = myTiles.iterator();
+		
+		Vector<Tile> tiles = mySquare.getmyTiles();
+		
+		Iterator<Tile> f = tiles.iterator();
+		while (e.hasNext()) {
+			Tile t=e.next();
+			Tile s = f.next();
+			
+			//Tile myT = new Tile(t.getX(),t.getY(),t.getinitX(),t.getinitY(),t.getSymbol());
+			if(!(       t.getX()==s.getX()   &&     t.getY()==s.getY()   &&  t.getinitX()==s.getinitX()   &&   t.getinitY()==s.getinitY()  &&   t.getSymbol()==s.getSymbol()       )){
+				test=false;
+			}
+			
+		}
+		
+		
+		return test;
+	}
+	
+	Vector<Tile> getmyTiles(){
+		return myTiles;
 	}
 
 }

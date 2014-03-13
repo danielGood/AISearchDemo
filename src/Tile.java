@@ -17,6 +17,16 @@ public class Tile  {
 		symbol=mySymbol;
 		
 	}
+	
+	Tile(int myX, int myY,int myinitX, int myinitY, int mySymbol){
+		x=myX; 
+		y=myY;
+		initX=myinitX; 
+		initY=myinitY;
+		symbol=mySymbol;
+		
+	}
+	
 	//where l is 2 in a 3X3
 	int[][] legalMoves(int l){
 		int[][] myMoves =new int[4][2];
