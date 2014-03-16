@@ -7,6 +7,33 @@ public class VeTwo {
 
 		//Daniel Good
 		//Currently Star runs a pure heuristic/best first search algorithm on a eight square puzzle
+		Square mySquare = new Square(3);
+		int symbols[] =new int[9];
+		symbols[0]=8;
+		symbols[1]=6;
+		symbols[2]=7;
+		symbols[3]=3;
+		symbols[4]=5;
+		symbols[5]=4;
+		symbols[6]=1;
+		symbols[7]=0;
+		symbols[8]=2;
+		
+		Square mySquare2 = new Square(3);
+		
+		//mySquare2=mySquare.assign(symbols);
+		//mySquare2.toPrint();
+		//mySquare2.toPrint();
+		//mySquare2.testFunction();
+		//mySquare2.debugOutput();
+		//mySquare2.switchTile(1, 2);
+		
+		
+		
+		
+		
+		//mySquare2.toPrint();
+		//mySquare2.debugOutput();
 		star();
 	}// end of main
 
@@ -15,31 +42,24 @@ public class VeTwo {
 	
 	static void star(){
 		//1
-			int[][] assign = new int[9][2];
-			assign[0][0] = 0;
-			assign[0][1] = 2;
-			assign[1][0] = 2;
-			assign[1][1] = 2;
-			assign[2][0] = 2;
-			assign[2][1] = 1;
-			assign[3][0] = 1;
-			assign[3][1] = 2;
-			assign[4][0] = 0;
-			assign[4][1] = 0;
-			assign[5][0] = 1;
-			assign[5][1] = 0;
-			assign[6][0] = 2;
-			assign[6][1] = 0;
-			assign[7][0] = 0;
-			assign[7][1] = 1;
-			assign[8][0] = 1;
-			assign[8][1] = 1;
+			int symbols[] =new int[9];
+			symbols[0]=8;
+			symbols[1]=6;
+			symbols[2]=7;
+			symbols[3]=3;
+			symbols[4]=5;
+			symbols[5]=4;
+			symbols[6]=1;
+			symbols[7]=0;
+			symbols[8]=2;
+			
 			Vector<Object> openList = new Vector<>(0);
 			Vector<Object> closedList = new Vector<>(0);
 			
 			Square mySquare = new Square(3);
 
-		mySquare.assign(assign);// ------------------bug here
+		mySquare=mySquare.assign(symbols);
+		
 		openList.add(mySquare);// maintain openList as a priority queue with the
 								// lowest values first
 		int firstH = mySquare.getManDistanceD();
@@ -54,7 +74,7 @@ public class VeTwo {
 				Square copyNode = (Square) openList.get(0);
 				Square bestNode = new Square(3);
 				bestNode = copyNode.copy();
-               // bestNode.toPrint();
+               //bestNode.toPrint();
 				openList.remove(0);//
 
 				closedList.add(bestNode);

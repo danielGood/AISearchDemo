@@ -7,7 +7,7 @@ public class Tile  {
       private int initX;
       private int initY;
       private int symbol;
-      
+      private int index;
 	//first time tiles
 	Tile(int myX, int myY, int mySymbol){
 		x=myX; 
