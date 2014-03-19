@@ -79,7 +79,10 @@ public class Square {
 
 	Vector<Square> generateChildren() {
 		Position pos = myPositions.get(blankIndex);
+		//System.out.println(blankIndex);
 		Tile e = pos.getTile();
+		e.setX(pos.getX());
+		e.setY(pos.getY());
 		int[][] moves = e.legalMoves(x);
 
 		
@@ -90,18 +93,20 @@ public class Square {
 			if (moves[i][0] != -1) {
 				
 				
-				
+				//System.out.println(moves[i][0]+" "+moves[i][1]);
 
 				
 				//Square tempSqr = new Square(x + 1, tiles,myPositions, blankIndex);
 				Square tempSqr =new Square(length);
+				
 				tempSqr = this.copy();
 				// this.toPrint();
 				// tempSqr.toPrint();
+				//tempSqr.debugOutput();
 				tempSqr.switchTile(moves[i][0], moves[i][1]);// switch is
 																// editing
 																// parent nodes
-				// this.toPrint();
+				 
 				// tempSqr.toPrint();
 				children.add(tempSqr);
 				// System.out.println(moves[i][0]+ " "+ moves[i][1]);
@@ -110,13 +115,7 @@ public class Square {
 
 			}
 		}
-		//System.out.println("out of loop");
-
-		// children.get(0).toPrint();
-		// children.get(1).toPrint();
-		// create vector tile copies
-		// perform switches
-		// init Squares
+	
 		// return Squares
 		return children;
 	}
@@ -124,7 +123,7 @@ public class Square {
 	public void switchTile(int myX, int myY) {
 		Iterator<Position> e = myPositions.iterator();
 		int counter = 0;
-       
+      
 		while (e.hasNext()) {
 			Position pos = e.next();
             Tile t =pos.getTile();
@@ -137,6 +136,12 @@ public class Square {
 				Tile tBlank=blank.getTile();
 				
 				
+				tBlank.setX(myX);
+				tBlank.setY(myY);
+				
+				t.setX(pos.getX());
+				t.setY(pos.getY());
+				
 				blank.setTile(t);
 				pos.setTile(tBlank);
 				
@@ -145,12 +150,12 @@ public class Square {
 				myPositions.set(blankIndex, blank);
 				
 				blankIndex=counter;
-				
+				//this.debugOutput();
 
 			}
 			counter++;
 		}
-
+          //System.out.println(blankIndex);
 	}
 
 	void toPrint() {
@@ -201,15 +206,18 @@ public class Square {
 			int symbol = t.getSymbol();
 			
 			System.out.println("Position :" + counter);
+			System.out.println(pos.getX()+" "+pos.getY());
 			System.out.println("Current Tile Stats");
-			System.out.println(t.getX()+"  "+ t.getY() +" "+ t.getSymbol());
-			System.out.println(t.getinitX() + " "+ t.getinitY());
+			System.out.println("X:"+t.getX()+"  Y:"+ t.getY() +"  Symbol:"+ t.getSymbol());
+			System.out.println("ix:"+t.getinitX() + "  iy:"+ t.getinitY());
 			System.out.println("Original Tile Stats");
-			System.out.println(o.getX()+"  "+ o.getY() +" "+ o.getSymbol());
-			System.out.println(o.getinitX() + " "+ o.getinitY());
+			System.out.println("x: "+o.getX()+"  y:"+ o.getY() +" symbol"+ o.getSymbol());
+			System.out.println("ix:"+o.getinitX() + "  iy:"+ o.getinitY());
 			System.out.println("----------------------------------------------");
-			
-			
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println();
 			counter++;
 		}
 	}
@@ -248,9 +256,13 @@ public class Square {
 			Tile t = p.getTile();
 			
 			//symbol to original tile square
-			int iY=(symbols[counter]-1) % (length);
-			int iX=(symbols[counter]-1-iY) / (length);
-			
+			int iX=(symbols[counter]-1) % (length);
+			int iY=(symbols[counter]-1-iX) / (length);
+			if(symbols[counter]==0){
+				iX=2;
+				iY=2;
+			}
+				
 			Tile myT = new Tile(p.getX(),p.getY(),iX, iY, symbols[counter]);
 			p.setTile(myT);
 			pos.add(p);
@@ -287,7 +299,8 @@ public class Square {
 			Tile myO = new Tile(o.getX(),o.getY(),o.getinitX(),o.getinitY(),o.getSymbol());
 			myY=counter %length;
 			myX=(counter-myY)/length;
-			Position addPos = new Position(myT, myO, myX, myY );
+			//System.out.println(counter + " "+ myX+  " "+ myY);
+			Position addPos = new Position(myT, myO, myY, myX );
 			
 			positions.add(addPos);
 			counter++;
@@ -312,13 +325,11 @@ public class Square {
 			Tile t = posOne.getTile();
 			Tile s =posTwo.getTile();
 			
-			//Tile myT = new Tile(t.getX(),t.getY(),t.getinitX(),t.getinitY(),t.getSymbol());
-			if(!(       t.getX()==s.getX()   &&     t.getY()==s.getY()   &&  t.getinitX()==s.getinitX()   &&   t.getinitY()==s.getinitY()  &&   t.getSymbol()==s.getSymbol()       )){
+			//each position carrys the x an y coordinates so there is no need to check for them
+			if(!(t.getSymbol()==s.getSymbol()))
 				test=false;
-			}
 			
 		}
-		
 		
 		return test;
 	}
@@ -328,3 +339,18 @@ public class Square {
 	}
 
 }
+
+/*3/19 encountered error with Manhattan values, the error was traced to assign(), I did two things to fix it 
+ * I created an exception for the zero symbol and I also inverted ix and iy.  The initals symptoms of this error were duplicate values in the bestNodes.  I also cleaned up equals for 
+ * the position paradigm.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+ 
+  

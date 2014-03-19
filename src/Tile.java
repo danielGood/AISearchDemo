@@ -42,22 +42,26 @@ public class Tile  {
 			//can move right
 			myMoves[0][0]=x+1;
 			myMoves[0][1]=y;
+			
 		}
 		if(x-1>=0){
 			//can move left
 			myMoves[1][0]=x-1;
 			myMoves[1][1]=y;
+			
 		}
 		
 		if(y+1<=l){
 			//can move up
 			myMoves[2][0]=x;
 			myMoves[2][1]=y+1;
+			
 		}
 		if(y-1>=0){
 			//can move down
 			myMoves[3][0]=x;
 			myMoves[3][1]=y-1;
+		
 		}
 		return myMoves;
 	}
