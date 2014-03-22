@@ -10,6 +10,7 @@ public class Square {
 	private int x;//max x
 	private int y;//max y
     private int length;
+    private Square parent=null;
     //conversion equations
     //index= length*current y +current x //produces 0,1,2,3,4,5,6,7,8
     //symbol = length*current y+current x + 1 // produces 1,2,3,4,5,6,7,8,9// must make exception for zero
@@ -100,6 +101,7 @@ public class Square {
 				Square tempSqr =new Square(length);
 				
 				tempSqr = this.copy();
+				tempSqr.setParent(null);//don't copy parents
 				// this.toPrint();
 				// tempSqr.toPrint();
 				//tempSqr.debugOutput();
@@ -261,6 +263,7 @@ public class Square {
 			if(symbols[counter]==0){
 				iX=2;
 				iY=2;
+				myBlank=counter;
 			}
 				
 			Tile myT = new Tile(p.getX(),p.getY(),iX, iY, symbols[counter]);
@@ -306,6 +309,7 @@ public class Square {
 			counter++;
 		}
 		Square tempSqr = new Square(x + 1,positions, blankIndex);
+		tempSqr.setParent(this.parent);
 		return tempSqr;
 		
 	}
@@ -337,7 +341,12 @@ public class Square {
 	Vector<Position> getmyPositions(){
 		return myPositions;
 	}
-
+	void setParent(Square s){
+		parent=s;
+	}
+	Square getParent(){
+		return parent;
+	}
 }
 
 /*3/19 encountered error with Manhattan values, the error was traced to assign(), I did two things to fix it 
@@ -345,7 +354,7 @@ public class Square {
  * the position paradigm.
  * 
  * 
- * 
+ *3/20 made some modifications to prepare for pathtracking and long story short, I think the 8 is acting as the 0; 
  * 
  * 
  * 

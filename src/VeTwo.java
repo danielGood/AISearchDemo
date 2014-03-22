@@ -53,7 +53,7 @@ That gives us this formula for determining solvability:
 		
 		//mySquare2.toPrint();
 		//mySquare2.debugOutput();
-		//star();
+		star();
 	}// end of main
 
 	
@@ -84,7 +84,8 @@ That gives us this formula for determining solvability:
 				Square copyNode = (Square) openList.get(0);
 				Square bestNode = new Square(3);
 				bestNode = copyNode.copy();
-               bestNode.toPrint();
+				
+              // bestNode.toPrint();
 				openList.remove(0);//
 
 				closedList.add(bestNode);
@@ -92,7 +93,9 @@ That gives us this formula for determining solvability:
 				if (bestNode.checkGoal()) {
 					loop = false;
 					System.out.println("Solution reached");
-					bestNode.toPrint();
+					//bestNode.getParent().toPrint();
+					printSolution(bestNode);
+					//bestNode.toPrint();
 				} else {
 					Vector<Square> children = new Vector<>(0);
 					children = bestNode.generateChildren();
@@ -106,6 +109,10 @@ That gives us this formula for determining solvability:
 						boolean permission= isNotOnLists(child,openList, closedList);
 
 						if (permission){
+							
+							addParent(child, bestNode);
+							
+							
 							int childMan = child.getManDistanceD();
 							
 							int childIndex=0;
@@ -143,11 +150,11 @@ That gives us this formula for determining solvability:
 		///  6   7   8
 		
 		
-		symbols[0]=1;//
-		symbols[1]=0;//
+		symbols[0]=4;//
+		symbols[1]=1;//
 		symbols[2]=3;//
 		
-		symbols[3]=4;//
+		symbols[3]=0;//
 		symbols[4]=2;//
 		symbols[5]=6;//
 		
@@ -186,6 +193,75 @@ That gives us this formula for determining solvability:
 		
 		return permission;
 	}
-
+	
+   static void addParent(Square child, Square parent){
+	  
+	   if(child.getParent()==null)
+	   {   
+		  
+	       child.setParent(parent);    
+	      
+	   }
+	
+	   
+	   else
+	   {
+		   Square former = child.getParent();
+		   int f=former.getManDistanceD();
+		   int p= parent.getManDistanceD();
+		   if(p<f)
+			   child.setParent(parent);
+	   }
+	   
+	   
+   }
+   
+   static void printSolution(Square finalNode){
+	  // finalNode.toPrint();
+	   Vector<Square> mySquare = new Vector<>(0);
+	   Square curr = finalNode;
+	   Square parent;
+	   boolean loop=true;
+	   while(loop){
+		   //curr.toPrint();
+		 // curr.getParent().toPrint();
+		   if(!(curr.getParent()==null)){
+			   //curr.toPrint();
+			   mySquare.add(curr);
+			   curr=curr.getParent();
+			   
+		   }
+		   else{
+			   //curr.toPrint();
+			   mySquare.add(curr);
+			   
+			   loop=false;
+		   }
+		   
+		  
+		   
+	   }
+	   
+	   int size= mySquare.size()-1;
+		  
+	   for(int i=size; i>=0; i--){
+		   Square temp= mySquare.get(i);
+		   
+		   temp.toPrint();
+	   }
+	   
+	   
+	 
+   }
+   
+   
 }// end of class
 
+
+
+
+/*
+3/20 current bug path finding, tends to skip over some steps, however all steps are accurate - not yet fixed
+  3/21 fixed was a copy bug, copy gave it same parents, - so there are two general types of copies those with parents and those without (ironicly children)
+anyways this is easily fixed in generateChildren with setParents(null)
+*/
