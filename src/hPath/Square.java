@@ -1,16 +1,20 @@
+package hPath;
 import java.util.Iterator;
 import java.util.Vector;
 
 //grid coordinates are zero based
-public class Square {
+public class  Square {
 	private int blankIndex;
 	//private Vector<Tile> myTiles = new Vector<>(0);
 	private Vector<Position> myPositions = new Vector<>(0);
-	private int size;
-	private int x;//max x
-	private int y;//max y
-    private int length;
-    private Square parent=null;
+	private static int size;
+	private static int x;//max x
+	private static int y;//max y
+    private static int length;
+    //private Square parent=null;
+    //private int fDash=0;
+   // private int gDash =0;
+   // private int hDash =0;
     //conversion equations
     //index= length*current y +current x //produces 0,1,2,3,4,5,6,7,8
     //symbol = length*current y+current x + 1 // produces 1,2,3,4,5,6,7,8,9// must make exception for zero
@@ -27,8 +31,31 @@ public class Square {
     //x=(index-y)/(length)
     
     
+    
+       
+    
 	// first time square
-	Square(int myX) {
+    
+    public Square() {
+		
+		blankIndex = size - 1;
+
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
+				int symbol = length * i + j + 1;
+				if (i == x && j == y)
+					symbol = 0;
+				Tile e = new Tile(j, i, symbol);
+				//myTiles.add(e);
+				Position pos = new Position(e, j, i);
+				myPositions.add(pos);
+			}
+		}
+
+	}
+    
+    
+	public Square(int myX) {
 		size = myX * myX;
 		x = myX - 1;
 		y = myX - 1;
@@ -49,7 +76,7 @@ public class Square {
 
 	}
 
-	Square(int myX,Vector<Position> pos, int blank) {
+   Square(int myX,Vector<Position> pos, int blank) {
 		size = myX * myX;
 		x = myX - 1;
 		y = myX - 1;
@@ -66,7 +93,7 @@ public class Square {
 	}
 	
 
-	boolean checkGoal() {
+	public boolean checkGoal() {
 		boolean i;
 		int distance= this.getManDistanceD();
 		if(distance==0){
@@ -78,7 +105,7 @@ public class Square {
 		return i;
 	}
 
-	Vector<Square> generateChildren() {
+	public Vector<Square> generateChildren() {
 		Position pos = myPositions.get(blankIndex);
 		//System.out.println(blankIndex);
 		Tile e = pos.getTile();
@@ -100,8 +127,8 @@ public class Square {
 				//Square tempSqr = new Square(x + 1, tiles,myPositions, blankIndex);
 				Square tempSqr =new Square(length);
 				
-				tempSqr = this.copy();
-				tempSqr.setParent(null);//don't copy parents
+				tempSqr = this.childCopy();
+				//tempSqr.setParent(null);//don't copy parents
 				// this.toPrint();
 				// tempSqr.toPrint();
 				//tempSqr.debugOutput();
@@ -160,7 +187,7 @@ public class Square {
           //System.out.println(blankIndex);
 	}
 
-	void toPrint() {
+	public void toPrint() {
 
 		Iterator<Position> e = myPositions.iterator();
 		int counter = 0;
@@ -193,7 +220,7 @@ public class Square {
 	}
 
 	
-	void debugOutput(){
+	public void debugOutput(){
 		Iterator<Position> e = myPositions.iterator();
 		
 		
@@ -224,7 +251,7 @@ public class Square {
 		}
 	}
 	
-	int getManDistanceD() {
+	public int getManDistanceD() {
 		int distance = 0;
 		Iterator<Position> e = myPositions.iterator();
 
@@ -240,7 +267,7 @@ public class Square {
 		return distance;
 	}
 
-	Square assign(int symbols[]) {
+	public Square assign(int symbols[]) {
 		
 		
 		//i=(x+1)*y+x
@@ -280,13 +307,13 @@ public class Square {
 		
 	}
 
-	void testFunction() {
+	public void testFunction() {
 		//switchTile(2,2);
 		
 		
 	}
 	
-	Square copy(){
+	public Object clone(){
 		Vector<Position> positions = new Vector<>(0);
 		Iterator<Position> e = myPositions.iterator();
         int counter=0;
@@ -309,17 +336,49 @@ public class Square {
 			counter++;
 		}
 		Square tempSqr = new Square(x + 1,positions, blankIndex);
-		tempSqr.setParent(this.parent);
+		//tempSqr.setParent(this.parent);
+		//tempSqr.setfDash(fDash);
+		//tempSqr.setgDash(gDash);
+		//tempSqr.sethDash(hDash);
 		return tempSqr;
 		
 	}
 	
-	boolean equals(Square mySquare){
+	public Square childCopy(){
+		Vector<Position> positions = new Vector<>(0);
+		Iterator<Position> e = myPositions.iterator();
+        int counter=0;
+        int myX;
+        int myY;
+		while (e.hasNext()) {
+			Position pos=e.next();//current position
+			
+			Tile t = pos.getTile();
+			Tile o = pos.getoriginalTile();
+			
+			Tile myT = new Tile(t.getX(),t.getY(),t.getinitX(),t.getinitY(),t.getSymbol());
+			Tile myO = new Tile(o.getX(),o.getY(),o.getinitX(),o.getinitY(),o.getSymbol());
+			myY=counter %length;
+			myX=(counter-myY)/length;
+			//System.out.println(counter + " "+ myX+  " "+ myY);
+			Position addPos = new Position(myT, myO, myY, myX );
+			
+			positions.add(addPos);
+			counter++;
+		}
+		Square tempSqr = new Square(x + 1,positions, blankIndex);
+		
+		return tempSqr;
+		
+	}	
+	
+	
+	public boolean equals(Object mySquare){
 		boolean test = true;
 		
 		Iterator<Position> e = myPositions.iterator();
 		
-		Vector<Position> pos = mySquare.getmyPositions();
+		Vector<Position> pos = ((Square) mySquare).getmyPositions();
 		
 		Iterator<Position> f = pos.iterator();
 		while (e.hasNext()) {
@@ -334,18 +393,41 @@ public class Square {
 				test=false;
 			
 		}
-		
+		//System.out.println("mark");
 		return test;
 	}
 	
-	Vector<Position> getmyPositions(){
+	public Vector<Position> getmyPositions(){
 		return myPositions;
 	}
-	void setParent(Square s){
-		parent=s;
+	public void setParent(Square s){
+		//parent=s;
 	}
-	Square getParent(){
-		return parent;
+	
+    
+	public int getBlankIndex(){
+		return blankIndex;
+	}
+	public int getLength(){
+		return length;
+	}
+	
+	@Override
+	public int hashCode(){
+		return getSimpleForm().hashCode();
+		
+	}
+	
+	public Vector<Integer> getSimpleForm(){
+		Vector <Integer> simpleForm = new Vector<Integer>(0);
+		Iterator<Position> e = myPositions.iterator();
+		while (e.hasNext()) {
+			Position pos=e.next();
+			Tile t=pos.getTile();
+			simpleForm.add(t.getSymbol());
+		}
+		
+		return simpleForm;
 	}
 }
 
