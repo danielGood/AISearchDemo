@@ -77,21 +77,26 @@ public class OperatorSquare<T> implements childRules<T> {
         	
         	int blankIndex = mySquare.getBlankIndex();
         	int l = mySquare.getLength();
+        	
         	//get coordinates of blank
         	//y=((index) % (length));
             //x=(index-y)/(length)
+        	//System.out.println(l);
+        	//System.out.println(blankIndex);
         	int x=blankIndex%l;
         	int y = (blankIndex-x)/l;
         	//System.out.println(x);
-        	//System.out.println(y);
+            //System.out.println(y);
         	if(x+1<=l){
     			//can move right
     			myChildren.add(right(x+1, y, mySquare));
+    			
     			
     		}
     		if(x-1>=0){
     			//can move left
     			myChildren.add(left(x-1, y, mySquare));
+    			
     			
     		}
     		
@@ -99,10 +104,12 @@ public class OperatorSquare<T> implements childRules<T> {
     			//can move up
     			myChildren.add(up(x, y+1, mySquare));
     			
+    			
     		}
     		if(y-1>=0){
     			//can move down
     			myChildren.add(down(x, y-1, mySquare));
+    			
     		
     		}
         			

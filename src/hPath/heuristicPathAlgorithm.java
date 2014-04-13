@@ -12,7 +12,7 @@ public class heuristicPathAlgorithm<T> {
 	
 	private HashMap<T, T> parent = new HashMap<T, T>();
 	private  HashMap<T, Object> gValues = new HashMap<T, Object>();
-	private  double walkConstant =0.5;              //if 1 pure heuristic search, if .5 A*, if 0 uniform cost 
+	private  double walkConstant =.5;              //if 1 pure heuristic search, if .5 A*, if 0 uniform cost 
 	private Vector<T> openList = new Vector<>(0);
 	private Vector<T> closedList = new Vector<>(0);
 	private T initalNode;

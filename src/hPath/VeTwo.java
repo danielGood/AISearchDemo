@@ -23,7 +23,7 @@ public class VeTwo {
 		Square mySquare = new Square(3);
 		Class aClass = Square.class;
 		String className= aClass.getName();
-		//heuristicPathAlgorithm<Square> myPath = new heuristicPathAlgorithm<Square>(mySquare, className);
+		
 	   
 		
 		childRules cR = new OperatorSquare();
@@ -33,16 +33,44 @@ public class VeTwo {
 		
 		Square mySquare2 = new Square(3);
 		mySquare2=assign();
+		//mySquare2.switchTile(1, 2);
+		//mySquare2.switchTile(0, 2);
+		mySquare2.toPrint();
+		
+		
 		//mySquare2.toPrint();
-		heuristicPathAlgorithm<Square> myPath = new heuristicPathAlgorithm<Square>(mySquare2, mySquare, className, cR);
-	    myPath.algo();
-		System.out.println();
-		System.out.println();
-		System.out.println();
 		
-	
+		/*
+		Vector<T> children = new Vector<T>(0);
+		
+		children=cR.getChildren(mySquare2);
+		Iterator<T> id = children.iterator();
+		while(id.hasNext()){
+			
+			Square child = (Square) id.next();
+			child.toPrint();
+			
+		}
+		
+		*/
 		
 		
+		Square mySquare3 = new Square(4);
+		int symbols[] ={
+				
+			7, 9, 0, 3,	
+			1, 11, 15, 5,	
+			8, 6, 4, 2,
+			10, 12, 13, 14
+		};
+		
+		
+		
+		
+		IDA<Square> myIDA= new IDA<Square>(mySquare2, mySquare, cR);
+		
+		//myIDA.debug();
+		myIDA.algo();
 		
 		
 		

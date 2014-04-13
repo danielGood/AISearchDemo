@@ -7,10 +7,10 @@ public class  Square {
 	private int blankIndex;
 	//private Vector<Tile> myTiles = new Vector<>(0);
 	private Vector<Position> myPositions = new Vector<>(0);
-	private static int size;
-	private static int x;//max x
+	private  int size;
+	private  int x;//max x
 	private static int y;//max y
-    private static int length;
+    private  int length;
     //private Square parent=null;
     //private int fDash=0;
    // private int gDash =0;
