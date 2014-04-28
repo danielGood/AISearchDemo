@@ -1,3 +1,4 @@
+package graph;
 
 public class CartesianPoint {
      private int x=0;

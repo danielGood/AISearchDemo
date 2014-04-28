@@ -8,4 +8,6 @@ public interface childRules<T> {
 	T clone(T myNode);
 	String toString(T myNode);
 	int g(T parent, T child);
+	
+	
 }
