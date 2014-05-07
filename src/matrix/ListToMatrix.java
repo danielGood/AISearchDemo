@@ -1,9 +1,10 @@
 package matrix;
 
+import graph.CartesianPoint;
+
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
-
-import tictactoe.Tile;
 
 public class ListToMatrix<T> {
 	
@@ -11,155 +12,131 @@ public class ListToMatrix<T> {
 	//what is the type
 	
 	
-	private Vector <Column> rows = new Vector <Column>(0);
-	private Vector <Column> columns = new Vector <Column>(0);
-	private int size;
+	
+	
 	private int numRows;
     private int numCols;
-    private Cell data=null;
-	public ListToMatrix(Vector<T> list){
+    private Cell<T> data=null;
+    
+    
+    private HashMap<CartesianPoint, T> map = new HashMap<CartesianPoint, T>();
+    
+    public ListToMatrix(){
+    	
+    }
+    
+	public ListToMatrix(HashMap<CartesianPoint, T> map, Cell<T> data){
+		
+		this.map=map;
+		this.data=data;
+		
 		
 	}
 	
+
+	
 	public ListToMatrix(Vector<T> list, int width, int height){
-		//exception if list size doesn't == width*height
-		
-		/*
-		
-		an example
-		
-		0  1 2
-		3  4 5
-		6  7 8
-		width=3
-		height=3
 		
 		
 		
-		
-		
-	   //0 ,1 ,2 3, 4, 5,... (width-1)
-	   //width,             2*width-1
-	   //2*width            3*width-1
-	    * 
-	    * 
-	    * 
-	    * 
-	    * 
-	    * 
-	    */
-		
-		//does rows
 		numRows=height;
 		numCols=width;
 		Iterator<T> id=(Iterator<T>) list.iterator();
-		//exception id does not have next
-		//exception id does not reach all units
-		for(int i=0; i<height; i++){
-			Vector<T> temp = new Vector<T>(0);
-			for(int j=0; j<width; j++){
-				T t=id.next();
-				temp.add(t);
-				
-				
+		
+		int w=0;
+		int h=0;
+		while(id.hasNext()){
+			
+			T t= id.next();
+			
+			CartesianPoint p = new CartesianPoint(w, h); 
+			map.put(p, t);
+			
+			
+			
+			
+			if((width-1)>w)
+				w++;
+			else
+			{
+				h++;
+				w=0;
 			}
-			Column<T> c = new Column<T>(temp);
-			rows.add(c);
-		}
-		
-		
-		//does columns
-		for(int j=0; j<width; j++){
-			Vector<T> temp = new Vector<T>(0);
-			for(int i=0; i<height; i++){
-				//pull ith row
-				//pull jth unit
-				Column<T> r=rows.get(i);
-				T t=(T) r.getIndex(j);
-				temp.add(t);
 				
-			}
-			Column<T> c = new Column<T>(temp);
-			columns.add(c);
+			
 		}
-		
 		
 		
 	}
 	
-	public ListToMatrix(Vector<T> list, int width, int height, Cell data){
-		//exception if list size doesn't == width*height
+	public ListToMatrix(Vector<T> list, int width, int height, Cell<T> data){
 		
-		/*
-		
-		an example
-		
-		0  1 2
-		3  4 5
-		6  7 8
-		width=3
-		height=3
-		
-		
-		
-		
-		
-	   //0 ,1 ,2 3, 4, 5,... (width-1)
-	   //width,             2*width-1
-	   //2*width            3*width-1
-	    * 
-	    * 
-	    * 
-	    * 
-	    * 
-	    * 
-	    */
-		
-		//does rows
 		this.data=data;
 		numRows=height;
 		numCols=width;
+		
+		numRows=height;
+		numCols=width;
 		Iterator<T> id=(Iterator<T>) list.iterator();
-		//exception id does not have next
-		//exception id does not reach all units
-		for(int i=0; i<height; i++){
-			Vector<T> temp = new Vector<T>(0);
-			for(int j=0; j<width; j++){
-				T t=id.next();
-				temp.add(t);
-				
-				
+		
+		int w=0;
+		int h=0;
+		while(id.hasNext()){
+			
+			T t= id.next();
+			
+			CartesianPoint p = new CartesianPoint(w, h); 
+			map.put(p, t);
+			
+			
+			
+			
+			if(width-1>w)
+				w++;
+			else
+			{
+				h++;
+				w=0;
 			}
-			Column<T> c = new Column<T>(temp);
-			rows.add(c);
+				
+			
 		}
 		
 		
-		//does columns
-		for(int j=0; j<width; j++){
-			Vector<T> temp = new Vector<T>(0);
-			for(int i=0; i<height; i++){
-				//pull ith row
-				//pull jth unit
-				Column<T> r=rows.get(i);
-				T t=(T) r.getIndex(j);
-				temp.add(t);
-				
-			}
-			Column<T> c = new Column<T>(temp);
-			columns.add(c);
-		}
-		
-		
-		
-	}
-	public Column<T> getRow(int i){
-		return rows.get(i);
 	}
 	
-	public Column<T> getColumn(int i){
-		return columns.get(i);
+	public T get(int x, int y){
+		CartesianPoint p = new CartesianPoint(x, y);
+		
+		T t=(T) map.get(p);
+		
+		return t; 
 	}
+	
+	public Vector<T> getCol(int i){
+		Vector<T> col = new Vector<T>();
+		for(int j=0; j<numRows; j++){
+			CartesianPoint p = new CartesianPoint(i, j);
+			col.add(map.get(p));
+		}
+		return col;
+		
+	}
+	
+	public Vector<T> getRow(int i){
+		Vector<T> col = new Vector<T>();
+		for(int j=0; j<numCols; j++){
+			CartesianPoint p = new CartesianPoint(j, i);
+			//System.out.println(map.get(p));
+			if(map.get(p)==null)
+				System.out.println("here " + j+ " "+ i);
+			col.add(map.get(p));
+		}
+		
+		return col;
+		
+	}
+	
 	
 	String toStringVector(Vector<T> temp){
 		String s="";
@@ -178,58 +155,50 @@ public class ListToMatrix<T> {
 		return s;
 	}
 	
-	 public T getIndex(int x, int y){
-		Column<T> row = rows.get(y);
-		return (T) row.getIndex(x);
-	}
-	 public void setIndex(int x, int y, T t){
+	
+	 public void set(int x, int y, T t){
 		 
-		 //rows
-		 Column<T> row = rows.get(y);
-		 row.setIndex(x, t);
-		 rows.set(y, row);
-		 
-		 //columns
-		 Column<T> c = columns.get(x);
-		 c.setIndex(y, t);
-		 columns.set(x, c);
+		 CartesianPoint p = new CartesianPoint(x, y);
+		 map.put(p, t);
 	 }
 	 
 	 public String toString(){
 		 
 		 String s="";
 		 for(int i=0; i<numRows; i++){
-			s= s +"\n"+ this.toStringVector(this.getRow(i).getColumn());
+			 
+			s= s +"\n"+ this.toStringVector(this.getRow(i));
 			
 		 }
-		 
-		 
+		
 		return s;
 	 }
 	 
-	public Vector<T> getAll(){
+	public HashMap<CartesianPoint, T> getMap(){
 		
-		Vector<T> all=new Vector<T>(0);
-		Iterator<T> ro = (Iterator<T>) rows.iterator();
-		while(ro.hasNext()){
-			Column<T> t=  (Column<T>) ro.next();
-			Vector<T> v;
-			v=t.getColumn();
-			Iterator<T> inRow = v.iterator();
-			while(inRow.hasNext()){
-				T temp = (T) inRow.next();
-				all.add(temp);
-			}
-			
-		}
-		return all;
+		return map;
 	}
 	
 	public ListToMatrix<T> clone(){
-		Vector<T> all= this.getAll();
-		Vector<T> all2=(Vector<T>) all.clone();
-		ListToMatrix<T> matrix=new ListToMatrix<T>(all2, numCols,numRows);
-		return matrix;
+		@SuppressWarnings("unchecked")
+		ListToMatrix<T> m= new ListToMatrix<T>((HashMap<CartesianPoint, T>) map.clone(), data);
+		
+		return m;
+	}
+	
+	public void setCell(Cell<T> data){
+		this.data=data;
+	}
+	
+	public Vector<T> getList(){
+		Vector<T> a= new Vector<T>();
+		for(int i=0; i<numRows; i++){
+			a.addAll(this.getRow(i));
+			
+		}
+		
+		
+		return a;
 	}
 }
 	

@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import ntile.OperatorSquare;
+import ntile.Square;
+
 public class VeTwo {
     
 	

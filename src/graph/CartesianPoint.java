@@ -7,7 +7,7 @@ public class CartesianPoint {
     
      
      
-     CartesianPoint(int i, int j){
+     public CartesianPoint(int i, int j){
     	 x=i;
     	 y=j;
      }
@@ -20,13 +20,20 @@ public class CartesianPoint {
     	 return cp;
      }
      
-     boolean equals(CartesianPoint cp){
-    	 boolean de = false;
-    	 if(x==cp.getX()&&y==cp.getY())
-    	     de=true;
-    	 return de;
-    	 
-     }
+    @Override public boolean equals(Object o){
+    	if(!(o instanceof CartesianPoint))
+    		return false;
+    	CartesianPoint p = (CartesianPoint) o;
+    	return p.x==x && p.y==y;
+    }
+    
+    @Override public int hashCode(){
+    	int hash=17;
+    	hash = 31 * hash + x;
+    	hash = 31 * hash + y;
+    	return hash;
+    }
+    
      
      int getManhattenDistance(CartesianPoint cp){
     	 
@@ -46,10 +53,10 @@ public class CartesianPoint {
      void setY(int i){
     	 y=i;
      }
-     int getX(){
+     public int getX(){
     	 return x;
      }
-     int getY(){
+     public int getY(){
     	 return y;
      } 
      

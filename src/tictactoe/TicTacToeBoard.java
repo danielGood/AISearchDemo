@@ -11,28 +11,26 @@ public class TicTacToeBoard<T>  {
        
         private ListToMatrix<T> matrix ;;
         
-        TicTacToeBoard(){
-        	
-        	Vector<Tile> myTiles = new Vector<Tile>(0);
-        	
-        	for(int i=0; i<9;i++){
-  
-        			Tile myTile = new Tile();
-        			myTiles.add(myTile);
-        		
-        	}
-        	Cell<T> myCell = new TileCell();
-        	matrix= new ListToMatrix<T>((Vector<T>) myTiles, 3, 3, myCell);
+      
+        public TicTacToeBoard(ListToMatrix<T> matrix){
+           this.matrix=matrix;	
         }
-        
-        public TicTacToeBoard(Vector<Tile> myTiles ){
-        	
-        	matrix= new ListToMatrix<T>((Vector<T>) myTiles, 3, 3);
-        }
-        
-        
-        
        
+        
+        Cell<T> myCell = new Cell<T>(){
+
+			@Override
+			public String toString(T t) {
+				
+				Tile tile = (Tile) t;
+				
+				int i=tile.getValue();
+				String s= ""+i;;
+				return s;
+			}
+        	
+        	
+        };
         
        public  boolean checkSolved(){
         	
@@ -42,40 +40,40 @@ public class TicTacToeBoard<T>  {
         	
         	Vector <Tile> line = new Vector<Tile>(0);
         	       
-           check=compareTiles((Vector<Tile>) matrix.getRow(0).getColumn());
+           check=compareTiles((Vector<Tile>) matrix.getRow(0));
            if(check)
         	   bo=true;
            
-           check=compareTiles((Vector<Tile>) matrix.getRow(1).getColumn());
+           check=compareTiles((Vector<Tile>) matrix.getRow(1));
            if(check)
         	   bo=true;
            
-           check=compareTiles((Vector<Tile>) matrix.getRow(2).getColumn());
+           check=compareTiles((Vector<Tile>) matrix.getRow(2));
            if(check)
         	   bo=true;
            
-           check=compareTiles((Vector<Tile>) matrix.getColumn(0).getColumn());
+           check=compareTiles((Vector<Tile>) matrix.getCol(0));
            if(check)
         	   bo=true;
        
-           check=compareTiles((Vector<Tile>) matrix.getColumn(1).getColumn());
+           check=compareTiles((Vector<Tile>) matrix.getCol(1));
            if(check)
         	   bo=true;
            
-           check=compareTiles((Vector<Tile>) matrix.getColumn(2).getColumn());
+           check=compareTiles((Vector<Tile>) matrix.getCol(2));
            if(check)
         	   bo=true;
            
-           line.add((Tile) matrix.getIndex(0,0));
-           line.add((Tile) matrix.getIndex(1,1));
-           line.add((Tile) matrix.getIndex(2,2));
+           line.add((Tile) matrix.get(0,0));
+           line.add((Tile) matrix.get(1,1));
+           line.add((Tile) matrix.get(2,2));
            check=compareTiles(line);
            if(check)
         	   bo=true;
            
-           line.set(0,(Tile) matrix.getIndex(0, 2));
-           line.set(1,(Tile) matrix.getIndex(1, 1));
-           line.set(2,(Tile) matrix.getIndex(2, 0));
+           line.set(0,(Tile) matrix.get(0, 2));
+           line.set(1,(Tile) matrix.get(1, 1));
+           line.set(2,(Tile) matrix.get(2, 0));
            check=compareTiles(line);
            if(check)
         	   bo=true;
@@ -132,9 +130,21 @@ public class TicTacToeBoard<T>  {
         }
         public void move(int x, int y, int value){
         	
-        	Tile t=(Tile) matrix.getIndex(x, y);
-        	t.setValue(value);
-            matrix.setIndex(x, y, (T) t);	
+        	
+        	if(x>2 || y>2 || y<0 || x<0){System.out.println("Out of bouds"); return;}
+        		
+        	
+        	Tile t=(Tile) matrix.get(x, y);
+        	int i=t.getValue();
+        	if(i==-1)
+        		t.setValue(value);
+        	else
+        	{
+        		System.out.println("space already occupied");
+        		return;
+        	}
+        		
+            matrix.set(x, y, (T) t);	
         }
         
         
@@ -143,11 +153,34 @@ public class TicTacToeBoard<T>  {
       }
         
 	@Override
-	public
-        String toString(){
+	public String toString(){
 		return matrix.toString();
 	}
 	
+	public boolean checkFin() {
+		
+		
+		ListToMatrix<T> matrix = this.getMatrix();
+		
+		boolean bo = true;
+    	
+		Vector<T> v = matrix.getList();
+    	Iterator<Tile>id = (Iterator<Tile>) v.iterator();
+    	while(id.hasNext()){
+    		Tile t=id.next();//error tile is null
+    		
+    		if(t.getValue()==-1)
+    			bo=false;
+    	}
+    	
+    	if(this.checkSolved())
+    		bo=true;
+    	
+		
+		
+		
+		return bo;
+	}
 	
 	
         

@@ -22,4 +22,7 @@ public interface TreeSearch<T, E> {
 	@Override
 	public boolean equals(Object obj);
 	
+	
+	public void setTurn(String s);//max or min for minimax
+	
 }
