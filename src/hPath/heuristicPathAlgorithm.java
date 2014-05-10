@@ -1,6 +1,4 @@
 package hPath;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -11,13 +9,13 @@ public class heuristicPathAlgorithm<T> {
 	  
 	
 	private HashMap<T, T> parent = new HashMap<T, T>();
-	private  HashMap<T, Object> gValues = new HashMap<T, Object>();
+	private  HashMap<T, Integer> gValues = new HashMap<T, Integer>();
 	private  double walkConstant =.5;              //if 1 pure heuristic search, if .5 A*, if 0 uniform cost 
 	private Vector<T> openList = new Vector<>(0);
 	private Vector<T> closedList = new Vector<>(0);
 	private T initalNode;
 	private T goalNode;
-	private String className;
+	
 	private childRules<T> cR;
 	
 	
@@ -28,51 +26,21 @@ public class heuristicPathAlgorithm<T> {
 		   
 	   }
 	
-	    heuristicPathAlgorithm(T initialNode, T goalNode, String clName, childRules<T> cR){
+	    heuristicPathAlgorithm(T initialNode, T goalNode, childRules<T> cR){
 		   this.initalNode=initialNode;
 		   this.goalNode=goalNode;
-		   className=clName;
+		   
 		   this.cR=cR;
-		   openList.add(initialNode);
+		   openList.add(initalNode);
 		   
 		   int g=0;
-		   gValues.put(initialNode, g);
+		   gValues.put(initalNode, g);
+		   System.out.println(gValues.get(initialNode));
 		  
 		   
 	   }
 	
 	
-	   
-	   T reflectCon(){
-		  try {
-			Class cl = Class.forName(className);
-			Constructor con =cl.getConstructor();
-			Object mySquare = (Object) con.newInstance();
-			return (T) mySquare;
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  return null;
-	   }
 	   
 	   
 	   
@@ -89,12 +57,9 @@ public class heuristicPathAlgorithm<T> {
 					System.out.println("Failure: Openlist contains no more nodes");
 					loop = false;
 				}else{
-					T copyNode =  (T) openList.get(0);                 //square specific
-					T bestNode = reflectCon();
-					bestNode = cR.clone(copyNode);      
-					                                 //square specific
-					
-	            ///  System.out.println(cR.toString(bestNode));
+					T copyNode =  (T) openList.get(0);                 
+					T bestNode = cR.clone(copyNode);
+					    
 					openList.remove(0);//
 
 					closedList.add(bestNode);
@@ -106,48 +71,40 @@ public class heuristicPathAlgorithm<T> {
 					}else{
 						Vector<T> children = new Vector<>(0);
 						children=cR.getChildren(bestNode);
-						Iterator id = children.iterator();
+						Iterator<T> id = children.iterator();
 						
 						while(id.hasNext()){
 							T child = (T) id.next();
 							boolean permission= isNotOnLists(child,openList, closedList);
 							
-							//System.out.println(permission);
+							
 							if(permission){
 								
+									
 								int g = (int) gValues.get(bestNode)+cR.g(bestNode, child);
 								gValues.put(child, g);
 								
 								parent.put(child, bestNode);
-								
-								
+
 								double childMan = f(child);
-								//System.out.println(childMan);
+							
 								int childIndex=0;
 								Iterator<T> addList = openList.iterator();
 								while (addList.hasNext()) {
 									T out = (T) addList.next();
-									//System.out.println(childMan);
-									//System.out.println(f(out));
+									
 									if(f(out)<childMan){
-										//System.out.println("hello");
+										
 										childIndex++;
 									}
 								}
-								//System.out.println(openList.size());
-								//System.out.println(childIndex);
 								openList.add(childIndex, child);
-								//System.out.println(openList.size());
+								
 							}
-							
-							
-							
-							
-							
+	
 						}
 					}
-	
-					
+			
 				}
 			   
 		   }

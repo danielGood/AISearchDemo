@@ -36,7 +36,7 @@ public class MinimaxTicTacToe<T, E> implements TreeSearch<T, E> {
     			
     			
     			
-    			ListToMatrix<T> matrix2 =matrix.clone();
+    			ListToMatrix<T> matrix2 =matrix.copy();
     			
     			if(xcounter==2){
     				xcounter=0;
@@ -125,7 +125,7 @@ public class MinimaxTicTacToe<T, E> implements TreeSearch<T, E> {
 	
 		ListToMatrix<T> matrix = tictac.getMatrix();
 		
-		TicTacToeBoard<T> tictactoe = new TicTacToeBoard<T>(matrix.clone());
+		TicTacToeBoard<T> tictactoe = new TicTacToeBoard<T>(matrix.copy());
 		return (T) tictactoe;
 	}
 

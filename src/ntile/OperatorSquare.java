@@ -31,28 +31,21 @@ public class OperatorSquare<T> implements childRules<T> {
 	    	
 	    	
 			Square<T> mySquare = (Square<T>) myNode;
-	    	///////////////////
-	    	CartesianPoint cp = mySquare.getBlankIndex();
-	    	CartesianPoint cp2 = new CartesianPoint(cp.getX(),cp.getY());
+	    
 	    	////////////////////////////////
 	    	int length=mySquare.getLength();
 	    	////////////////////////////////
 	    	ListToMatrix<Tile> flux= mySquare.getFlux();
-	    	ListToMatrix<Tile> flux2 =flux.clone();
+	    	ListToMatrix<Tile> flux2 =flux.copy();
 	    	
 	    	/////////////////////////////////////
 	    	
-			Square<Tile> tempSqr = new Square<Tile>(length, flux2.getList(), cp2);
+			Square<Tile> tempSqr = new Square<Tile>(length, flux2.getList());
 			//tempSqr.setParent(this.parent);
 			//tempSqr.setfDash(fDash);
 			//tempSqr.setgDash(gDash);
 			//tempSqr.sethDash(hDash);
-	    	
-	    	
-	    	 
-	    	
-	    	
-	    	
+
 	    	return (T) tempSqr ;
 	 
 	    }

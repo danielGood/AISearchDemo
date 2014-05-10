@@ -4,6 +4,7 @@ import graph.CartesianPoint;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import tictactoe.Tile;
@@ -18,13 +19,37 @@ public class Square<T> {
 	private ListToMatrix<Tile> flux;
 	private int length;
 
+	
+	//min is always 0
+	//max is always length *length
+	
+	
+	
 	@SuppressWarnings("unchecked")
-	Square(int myX, Vector<Tile> tile, CartesianPoint cp) {
+	public Square(int myX, List<Tile> tile) {
 
 		length = myX;
-		blankIndex = cp;
 		
-		flux = new ListToMatrix<Tile>(tile, length, length, (Cell<Tile>) myCell);
+		
+		flux = new ListToMatrix<Tile>((Cell<Tile>) myCell);
+		
+		
+		
+		solu=new HashMap<>();
+		
+		int firstCounter=0;
+		for(int i=0; i<myX; i++){
+			for(int j=0; j<myX; j++){
+				flux.set(j, i, tile.get(firstCounter));
+				if(tile.get(firstCounter).getValue()==0)
+					blankIndex= new CartesianPoint(j, i);
+				firstCounter++;
+			}
+		}
+		
+		
+		
+		
 		
 		int counter=1;
 		for(int i=0; i<myX; i++){
@@ -55,7 +80,21 @@ public class Square<T> {
 		}
 
 	};
-
+	/*
+     private CartesianPoint find(int i){
+    	 CartesianPoint cp=null;
+    	 for(int k=0; k<length; k++){
+    		 for(int j=0; j<length; j++){
+    			 if(flux.get(k, j).getValue()==0){
+    				 cp=new CartesianPoint(k, j);
+    			 }
+    				 
+    		 }
+    	 }
+    	 return cp;
+    	 
+     }
+     */
 	// switch tile with blank tile
 	public void switchTile(int myX, int myY) {
 		// blank coordinates
@@ -91,22 +130,39 @@ public class Square<T> {
 		return length;
 	}
 
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof Square))
+			return false;
+		@SuppressWarnings("unchecked")
+		Square<Tile> s = (Square<Tile>) obj;
+		if(s.getFlux().equals(this.getFlux()))
+			return true;
+		return false;
+	}
+	
 	@Override
 	public int hashCode() {
 		return getSimpleForm().hashCode();
 
 	}
-
+    
 	public Vector<Integer> getSimpleForm() {
-		Vector<Tile> list = flux.getList();
+		List<Tile> list = flux.getList();
 		Vector<Integer> simpleForm = new Vector<Integer>(0);
 		Iterator<Tile> e = list.iterator();
+		
 		while (e.hasNext()) {
 			Tile t = e.next();
+			
+			
 			simpleForm.add(t.getValue());
 		}
 
 		return simpleForm;
 	}
+	
+	
 }
   

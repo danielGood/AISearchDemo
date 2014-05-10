@@ -1,6 +1,7 @@
 package tictactoe;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import matrix.Cell;
@@ -164,7 +165,7 @@ public class TicTacToeBoard<T>  {
 		
 		boolean bo = true;
     	
-		Vector<T> v = matrix.getList();
+		List<T> v = matrix.getList();
     	Iterator<Tile>id = (Iterator<Tile>) v.iterator();
     	while(id.hasNext()){
     		Tile t=id.next();//error tile is null
